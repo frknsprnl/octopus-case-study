@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
+import CartDrawer from "@/components/ui/CartDrawer";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap"
+});
+
 export const metadata: Metadata = {
-  title: "Octopus Case Study",
-  description: "Mini e‑commerce case study"
+  title: "Octopus",
+  description: "Manage your smart signage, watch your company grow."
 };
 
 export default function RootLayout({
@@ -12,13 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr">
-      <body className="min-h-screen">
-        <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
-          {children}
-        </div>
-      </body>
+    <html lang="tr" className={poppins.variable}>
+      <body className="font-poppins antialiased">
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                {children}
+                <CartDrawer />
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </body>
     </html>
   );
 }
-

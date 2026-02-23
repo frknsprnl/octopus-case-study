@@ -1,22 +1,33 @@
-interface ProductDetailPageProps {
-  params: {
-    id: string;
-  };
+import { notFound } from "next/navigation";
+import Header from "@/components/layout/Header";
+import ProductDetail, { type ProductDetailData } from "@/components/products/ProductDetail";
+
+interface Props {
+  params: { id: string };
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  return (
-    <main className="flex flex-1 flex-col">
-      <header className="mb-6 space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Ürün Detayı &mdash; #{params.id}
-        </h1>
-      </header>
+export default async function ProductDetailPage({ params }: Props) {
+  const productRes = await fetch(`https://dummyjson.com/products/${params.id}`, {
+    next: { revalidate: 60 }
+  });
 
-      <section className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
-        Ürün detay içeriği
-      </section>
-    </main>
+  // Comments API disabled for now — using only product.reviews. Re-enable when clarified.
+  // const [productRes, commentRes] = await Promise.all([
+  //   fetch(`https://dummyjson.com/products/${params.id}`, { next: { revalidate: 60 } }),
+  //   fetch(`https://dummyjson.com/comments/${params.id}`, { next: { revalidate: 60 } })
+  // ]);
+  // const commentData = commentRes.ok ? await commentRes.json() : null;
+  // const externalComment: DummyComment | null =
+  //   commentData && !commentData.message ? commentData : null;
+
+  if (!productRes.ok) notFound();
+
+  const product: ProductDetailData = await productRes.json();
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <Header />
+      <ProductDetail product={product} />
+    </div>
   );
 }
-
