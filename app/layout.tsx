@@ -15,7 +15,10 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Octopus",
-  description: "Manage your smart signage, watch your company grow."
+  description: "Manage your smart signage, watch your company grow.",
+  icons: {
+    icon: [{ url: "/images/octo-single.svg", type: "image/svg+xml" }]
+  }
 };
 
 export default function RootLayout({
